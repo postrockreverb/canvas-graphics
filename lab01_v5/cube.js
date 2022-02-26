@@ -4,6 +4,41 @@ class Point {
     this.y = y;
     this.z = z;
   }
+
+  get(coordName) {
+    switch (coordName) {
+      case "x":
+        return this.x;
+
+      case "y":
+        return this.y;
+
+      case "z":
+        return this.z;
+
+      default:
+        break;
+    }
+  }
+
+  set(coordName, value) {
+    switch (coordName) {
+      case "x":
+        this.x = value;
+        break;
+
+      case "y":
+        this.y = value;
+        break;
+
+      case "z":
+        this.z = value;
+        break;
+
+      default:
+        break;
+    }
+  }
 }
 
 // sliders
@@ -25,10 +60,12 @@ slider.x.oninput = function () {
   sliderValue.x = this.value;
 };
 slider.y.oninput = function () {
-  rotate("y", toRads(this.value));
+  rotate("y", toRads(this.value - sliderValue.y));
+  sliderValue.y = this.value;
 };
 slider.z.oninput = function () {
-  rotate("z", toRads(this.value));
+  rotate("z", toRads(this.value - sliderValue.z));
+  sliderValue.z = this.value;
 };
 
 // ctx
@@ -73,19 +110,24 @@ const edges = [
 ];
 
 function rotate(axes, angle) {
-  if (axes === "x") {
-    for (let v of vertices) {
-      let dy = v.y - c.y;
-      let dz = v.z - c.z;
-      let y = dy * Math.cos(angle) - dz * Math.sin(angle);
-      let z = dy * Math.sin(angle) + dz * Math.cos(angle);
-      v.y = y + c.y;
-      v.z = z + c.z;
-    }
-  }
+  axisDict = {
+    x: ["y", "z"],
+    y: ["x", "z"],
+    z: ["x", "y"],
+  };
+  let a = axisDict[axes][0];
+  let b = axisDict[axes][1];
 
-  // y = x z
-  // z = x y
+  for (let v of vertices) {
+    let distA = v.get(a) - c.get(a);
+    let distB = v.get(b) - c.get(b);
+
+    let valA = distA * Math.cos(angle) - distB * Math.sin(angle);
+    let valB = distA * Math.sin(angle) + distB * Math.cos(angle);
+
+    v.set(a, valA + c.get(a));
+    v.set(b, valB + c.get(b));
+  }
 }
 
 function drawCube() {
@@ -105,7 +147,7 @@ function loop(timeNow) {
   timeDelta = timeNow - timeLast;
   timeLast = timeNow;
 
-  ctx.fillRect(0, 0, w, h); // background
+  ctx.fillRect(0, 0, w, h); // fill background
 
   drawCube();
   requestAnimationFrame(loop);
