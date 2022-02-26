@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+}
+
+canvas {
+  display: block;
+}
+
+.sliders {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
