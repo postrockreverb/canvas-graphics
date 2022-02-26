@@ -1,11 +1,3 @@
-const COLOR_BG = "black";
-const COLOR_CUBE = "yellow";
-
-// rotation speed
-const SPEED_X = 0.01;
-const SPEED_Y = 0.01;
-const SPEED_Z = 0.01;
-
 class Point {
   constructor(x, y, z) {
     this.x = x;
@@ -14,25 +6,32 @@ class Point {
   }
 }
 
-var sliderX = document.getElementById("rangeX");
-var sliderY = document.getElementById("rangeY");
-var sliderZ = document.getElementById("rangeZ");
-
-var rotationX, rotationY, rotationZ;
+// sliders
 
 function toRads(degs) {
   return (degs * Math.PI) / 180;
 }
 
-sliderX.oninput = function () {
-  rotate("x", toRads(this.value));
+var slider = new Point(
+  document.getElementById("rangeX"),
+  document.getElementById("rangeY"),
+  document.getElementById("rangeZ")
+);
+
+var sliderValue = new Point(0, 0, 0);
+
+slider.x.oninput = function () {
+  rotate("x", toRads(this.value - sliderValue.x));
+  sliderValue.x = this.value;
 };
-sliderY.oninput = function () {
+slider.y.oninput = function () {
   rotate("y", toRads(this.value));
 };
-sliderZ.oninput = function () {
+slider.z.oninput = function () {
   rotate("z", toRads(this.value));
 };
+
+// ctx
 
 var canvas = document.createElement("canvas");
 document.body.appendChild(canvas);
@@ -43,13 +42,18 @@ var w = document.documentElement.clientWidth;
 canvas.height = h;
 canvas.width = w;
 
-ctx.fillStyle = COLOR_BG;
-ctx.strokeStyle = COLOR_CUBE;
+// style
+
+ctx.fillStyle = "black";
+ctx.strokeStyle = "yellow";
 ctx.lineWidth = w / 100;
 ctx.lineCap = "round";
 
+// initial
+
 var c = new Point(w / 2, h / 2, 0); // initial coordinates (center)
-var size = h / 4;
+var curAngle = new Point(0, 0, 0); // initial rotation (isometrical)
+var size = h / 4; // size of cube
 var vertices = [
   new Point(c.x - size, c.y - size, c.z - size),
   new Point(c.x + size, c.y - size, c.z - size),
@@ -61,8 +65,9 @@ var vertices = [
   new Point(c.x - size, c.y + size, c.z + size),
 ];
 
+// edges connection
 // prettier-ignore
-var edges = [
+const edges = [
   [0, 1],[1, 2],[2, 3],[3, 0],[4, 5],[5, 6],
   [6, 7],[7, 4],[0, 4],[1, 5],[2, 6],[3, 7],
 ];
@@ -78,26 +83,9 @@ function rotate(axes, angle) {
       v.z = z + c.z;
     }
   }
-  if (axes === "y") {
-    for (let v of vertices) {
-      let dx = v.x - c.x;
-      let dz = v.z - c.z;
-      let x = dz * Math.sin(angle) + dx * Math.cos(angle);
-      let z = dz * Math.cos(angle) - dx * Math.sin(angle);
-      v.x = x + c.x;
-      v.z = z + c.z;
-    }
-  }
-  if (axes === "z") {
-    for (let v of vertices) {
-      let dx = v.x - c.x;
-      let dy = v.y - c.y;
-      let x = dx * Math.cos(angle) - dy * Math.sin(angle);
-      let y = dx * Math.sin(angle) + dy * Math.cos(angle);
-      v.x = x + c.x;
-      v.y = y + c.y;
-    }
-  }
+
+  // y = x z
+  // z = x y
 }
 
 function drawCube() {
