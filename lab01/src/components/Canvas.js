@@ -72,7 +72,6 @@ export default Canvas;
 
 const styles = {
   sliders: {
-    // borderBottom: '0.5px solid white',
     padding: '7px',
     display: 'flex',
     flexDirection: 'row',
