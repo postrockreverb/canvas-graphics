@@ -29,9 +29,9 @@ class Canvas extends React.Component {
     console.log(r);
     this.ctx = r.getContext('2d');
     // style
-    this.ctx.fillStyle = 'white';
-    this.ctx.strokeStyle = 'black';
-    this.ctx.lineWidth = this.w / 100;
+    this.ctx.fillStyle = 'black';
+    this.ctx.strokeStyle = 'thistle';
+    this.ctx.lineWidth = this.w / 300;
     this.ctx.lineCap = 'round';
   }
 
@@ -57,9 +57,11 @@ class Canvas extends React.Component {
   render() {
     return (
       <div>
-        <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => this.rotateCube('x', v)} />
-        <Slider label="y" min={0} max={360} defaultValue={initRotDeg.get('y')} onChange={(v) => this.rotateCube('y', v)} />
-        <Slider label="z" min={0} max={360} defaultValue={initRotDeg.get('z')} onChange={(v) => this.rotateCube('z', v)} />
+        <div style={styles.sliders}>
+          <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => this.rotateCube('x', v)} />
+          <Slider label="y" min={0} max={360} defaultValue={initRotDeg.get('y')} onChange={(v) => this.rotateCube('y', v)} />
+          <Slider label="z" min={0} max={360} defaultValue={initRotDeg.get('z')} onChange={(v) => this.rotateCube('z', v)} />
+        </div>
         <canvas width={this.w} height={this.h} ref={this.setContext} />
       </div>
     );
@@ -67,3 +69,16 @@ class Canvas extends React.Component {
 }
 
 export default Canvas;
+
+const styles = {
+  sliders: {
+    // borderBottom: '0.5px solid white',
+    padding: '7px',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'black',
+    color: 'white',
+    fontSize: 'large',
+  },
+};

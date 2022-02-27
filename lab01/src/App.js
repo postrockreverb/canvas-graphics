@@ -8,7 +8,7 @@ const App = () => {
   const { width, height } = useWindowDimensions();
   return (
     <div>
-      <Canvas width={width * 0.8} height={height * 0.8} />
+      <Canvas width={width} height={height} />
     </div>
   );
 };
