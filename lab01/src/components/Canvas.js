@@ -1,13 +1,14 @@
 import React from 'react';
-import { Cube } from './Cube';
-import { Point } from './Point';
-import { Slider } from './Slider';
+import { Cube, Pyramid } from './Figure';
+import Point from './Point';
+import Slider from './Slider';
+import Selector from './Selector';
 
 const toRad = (degs) => {
   return (degs * Math.PI) / 180;
 };
 
-const initRotDeg = new Point(45, 45, 45);
+const initRotDeg = new Point(45, 45, 36);
 const initRotRad = new Point(toRad(initRotDeg.get('x')), toRad(initRotDeg.get('y')), toRad(initRotDeg.get('z')));
 
 class Canvas extends React.Component {
@@ -20,9 +21,9 @@ class Canvas extends React.Component {
 
     var c = new Point(this.w / 2, this.h / 2, 0); // initial coordinates (center)
     var size = (this.w < this.h ? this.w : this.h) / 4; // size of cube
-    this.cube = new Cube(c, size);
+    this.figure = new Cube(c, size);
 
-    this.cube.setRotationPoint(initRotRad);
+    this.figure.setRotationPoint(initRotRad);
   }
 
   setContext(r) {
@@ -45,12 +46,12 @@ class Canvas extends React.Component {
 
   draw() {
     this.ctx.fillRect(0, 0, this.w, this.h); // fill background
-    this.cube.draw(this.ctx);
+    this.figure.draw(this.ctx);
   }
 
-  rotateCube(axes, degs) {
+  rotateFigure(axes, degs) {
     const rads = toRad(degs);
-    this.cube.setRotation(axes, rads);
+    this.figure.setRotation(axes, rads);
     this.forceUpdate();
   }
 
@@ -58,9 +59,9 @@ class Canvas extends React.Component {
     return (
       <div>
         <div style={styles.sliders}>
-          <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => this.rotateCube('x', v)} />
-          <Slider label="y" min={0} max={360} defaultValue={initRotDeg.get('y')} onChange={(v) => this.rotateCube('y', v)} />
-          <Slider label="z" min={0} max={360} defaultValue={initRotDeg.get('z')} onChange={(v) => this.rotateCube('z', v)} />
+          <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => this.rotateFigure('x', v)} />
+          <Slider label="y" min={0} max={360} defaultValue={initRotDeg.get('y')} onChange={(v) => this.rotateFigure('y', v)} />
+          <Slider label="z" min={0} max={360} defaultValue={initRotDeg.get('z')} onChange={(v) => this.rotateFigure('z', v)} />
         </div>
         <canvas width={this.w} height={this.h} ref={this.setContext} />
       </div>

@@ -17,7 +17,7 @@ const Slider = ({ label, min, max, defaultValue, onChange }) => {
   );
 };
 
-export { Slider };
+export default Slider;
 
 const styles = {
   container: {
