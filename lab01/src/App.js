@@ -6,11 +6,7 @@ import useWindowDimensions from './hooks/useWindowDimensions';
 
 const App = () => {
   const { width, height } = useWindowDimensions();
-  return (
-    <div>
-      <Canvas width={width} height={height} />
-    </div>
-  );
+  return <Canvas width={width} height={height} />;
 };
 
 export default App;

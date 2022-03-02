@@ -79,7 +79,7 @@ class Canvas extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <div style={styles.sliders}>
           <Selector onChange={(o) => this.changeFigure(o)} />
           <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => this.rotateFigure('x', v)} />
@@ -87,7 +87,7 @@ class Canvas extends React.Component {
           <Slider label="z" min={0} max={360} defaultValue={initRotDeg.get('z')} onChange={(v) => this.rotateFigure('z', v)} />
         </div>
         <canvas width={this.w} height={this.h} ref={this.setContext} />
-      </div>
+      </>
     );
   }
 }
