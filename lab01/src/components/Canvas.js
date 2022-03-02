@@ -15,7 +15,7 @@ const Canvas = ({ width, height }) => {
   const canvasRef = useRef();
 
   const center = new Point(width / 2, height / 2, 0);
-  const size = width < height ? width : height / 4;
+  const size = (width < height ? width : height) / 4;
   const [figure, setFigure] = useState(new Diamond(center, size));
 
   const [rendered, setRendered] = useState(false);
