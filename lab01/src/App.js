@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Canvas from './components/Canvas';
+import Canvas from './components/Lab02/Canvas';
 
 import useWindowDimensions from './hooks/useWindowDimensions';
 
