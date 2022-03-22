@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Cube, Pyramid, Diamond } from './Figure';
-import Point from './Point';
+import Point from '../Point';
 import Slider from './Slider';
 import Selector from './Selector';
 
@@ -11,7 +11,7 @@ const toRad = (degs) => {
 const initRotDeg = new Point(45, 45, 36);
 const initRotRad = new Point(toRad(initRotDeg.get('x')), toRad(initRotDeg.get('y')), toRad(initRotDeg.get('z')));
 
-const Canvas = ({ width, height }) => {
+export const Canvas = ({ width, height }) => {
   const canvasRef = useRef();
 
   const center = new Point(width / 2, height / 2, 0);
@@ -68,8 +68,6 @@ const Canvas = ({ width, height }) => {
     </>
   );
 };
-
-export default Canvas;
 
 const styles = {
   sliders: {
