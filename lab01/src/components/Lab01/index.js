@@ -1,4 +1,7 @@
+import styles from './index.module.css';
+
 import React, { useState, useRef, useEffect } from 'react';
+
 import { Cube, Pyramid, Diamond } from './Figure';
 import Point from '../Point';
 import Slider from './Slider';
@@ -11,7 +14,7 @@ const toRad = (degs) => {
 const initRotDeg = new Point(45, 45, 36);
 const initRotRad = new Point(toRad(initRotDeg.get('x')), toRad(initRotDeg.get('y')), toRad(initRotDeg.get('z')));
 
-export const Canvas = ({ width, height }) => {
+const CanvasProvider = ({ width, height }) => {
   const canvasRef = useRef();
 
   const center = new Point(width / 2, height / 2, 0);
@@ -58,7 +61,7 @@ export const Canvas = ({ width, height }) => {
 
   return (
     <>
-      <div style={styles.sliders}>
+      <div className={styles.sliders}>
         <Selector onChange={(o) => changeFigure(o)} />
         <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => rotateFigure('x', v)} />
         <Slider label="y" min={0} max={360} defaultValue={initRotDeg.get('y')} onChange={(v) => rotateFigure('y', v)} />
@@ -69,14 +72,4 @@ export const Canvas = ({ width, height }) => {
   );
 };
 
-const styles = {
-  sliders: {
-    padding: '7px',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    backgroundColor: 'black',
-    color: 'white',
-    fontSize: 'large',
-  },
-};
+export default CanvasProvider;
