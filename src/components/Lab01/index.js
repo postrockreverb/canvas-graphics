@@ -3,7 +3,7 @@ import styles from './index.module.css';
 import React, { useState, useRef, useEffect } from 'react';
 
 import { Cube, Pyramid, Diamond } from './Figure';
-import Point from '../Point';
+import Point from './Point';
 import Slider from './Slider';
 import Selector from './Selector';
 
