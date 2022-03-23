@@ -23,12 +23,18 @@ Array.prototype.swap = function (x, y) {
 };
 
 export class Canvas {
+  setBoundaryCondition(condition) {
+    this.boundaryCondition = condition;
+    this.draw();
+  }
+
   constructor(canvas) {
     const ctx = canvas.getContext('2d');
     this.canvas = canvas;
     this.ctx = ctx;
     this.knots = initialKnots;
     this.selectedKnot = undefined;
+    this.boundaryCondition = 'fixed';
   }
 
   startDragging(cursor) {
@@ -86,7 +92,7 @@ export class Canvas {
   drawFunctionCurveFromKnots() {
     const ctx = this.ctx;
     const knots = this.knots;
-    const functions = cubicSplineInterpolation(knots, 'quadratic');
+    const functions = cubicSplineInterpolation(knots, this.boundaryCondition);
 
     ctx.save();
     ctx.beginPath();
