@@ -2,7 +2,8 @@ import styles from './index.module.css';
 
 import React from 'react';
 
-import { Canvas } from './Canvas';
+import { Canvas } from './canvas';
+
 import Selector from './Selector';
 import { Slider } from './Slider';
 

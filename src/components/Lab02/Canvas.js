@@ -1,4 +1,4 @@
-import { cubicSplineInterpolation } from './CubicSplineInterpolation';
+import { cubicSplineInterpolation } from './сubicSplineInterpolation';
 
 Array.prototype.swap = function (x, y) {
   var b = this[x];
