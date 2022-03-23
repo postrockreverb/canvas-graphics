@@ -122,12 +122,12 @@ function rref(mat) {
     if (mat[0].length <= lead) return;
 
     let i = r;
-    while (mat[i][lead] == 0) {
+    while (mat[i][lead] === 0) {
       i++;
-      if (mat.length == i) {
+      if (mat.length === i) {
         i = r;
         lead++;
-        if (mat[0].length == lead) return;
+        if (mat[0].length === lead) return;
       }
     }
 
@@ -141,7 +141,7 @@ function rref(mat) {
     }
 
     for (let i = 0; i < mat.length; i++) {
-      if (i == r) continue;
+      if (i === r) continue;
       val = mat[i][lead];
       for (let j = 0; j < mat[0].length; j++) {
         mat[i][j] = mat[i][j] - val * mat[r][j];
