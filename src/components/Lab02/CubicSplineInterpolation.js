@@ -57,10 +57,10 @@ export function cubicSplineInterpolation(p, boundary) {
       break;
 
     case 'loose':
-      m[row][0 + 0] = 1;
-      m[row++][0 + 4] = -1;
-      m[row][solutionIndex - 8 + 0] = 1;
-      m[row][solutionIndex - 4 + 0] = -1;
+      m[row][0 + 0] = 6 * p[0].x;
+      m[row++][0 + 1] = 2;
+      m[row][solutionIndex - 4 + 0] = 6 * p[p.length - 1].x;
+      m[row][solutionIndex - 4 + 1] = 2;
       break;
 
     case 'periodic':
@@ -78,8 +78,15 @@ export function cubicSplineInterpolation(p, boundary) {
       break;
 
     case 'aperiodic':
-      m[row][0 + 0] = 6 * p[0].x;
-      m[row++][0 + 1] = 2;
+      m[row][0] = 3 * Math.pow(p[0].x, 2);
+      m[row][1] = 2 * p[0].x;
+      m[row][2] = 1;
+      m[row][solutionIndex - 4 + 0] = 3 * Math.pow(p[p.length - 1].x, 2);
+      m[row][solutionIndex - 4 + 1] = 2 * p[p.length - 1].x;
+      m[row++][solutionIndex - 4 + 2] = 1;
+
+      m[row][0] = 6 * p[0].x;
+      m[row][1] = 2;
       m[row][solutionIndex - 4 + 0] = 6 * p[p.length - 1].x;
       m[row][solutionIndex - 4 + 1] = 2;
       break;
