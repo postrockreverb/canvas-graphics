@@ -1,5 +1,3 @@
-import * as math from 'mathjs';
-
 export function cubicSplineInterpolation(p, boundary) {
   let row = 0;
   let solutionIndex = (p.length - 1) * 4;
