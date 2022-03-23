@@ -22,6 +22,10 @@ export class Canvas {
     this.boundaryCondition = 'fixed';
   }
 
+  setKnots(knots) {
+    this.knots = knots;
+  }
+
   startDragging(cursor) {
     this.selectedKnot = this.getNearestKnot(cursor);
   }
