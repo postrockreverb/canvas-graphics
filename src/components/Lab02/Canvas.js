@@ -1,20 +1,5 @@
 import { cubicSplineInterpolation } from './CubicSplineInterpolation';
 
-const initialKnots = [
-  { x: 50, y: 150 },
-  { x: 100, y: 170 },
-  { x: 150, y: 250 },
-  { x: 200, y: 400 },
-  { x: 300, y: 350 },
-  { x: 400, y: 250 },
-  { x: 500, y: 50 },
-  { x: 600, y: 250 },
-  { x: 650, y: 200 },
-  { x: 700, y: 180 },
-  { x: 725, y: 120 },
-  { x: 750, y: 90 },
-];
-
 Array.prototype.swap = function (x, y) {
   var b = this[x];
   this[x] = this[y];
@@ -28,11 +13,11 @@ export class Canvas {
     this.draw();
   }
 
-  constructor(canvas) {
+  constructor(canvas, knots) {
     const ctx = canvas.getContext('2d');
     this.canvas = canvas;
     this.ctx = ctx;
-    this.knots = initialKnots;
+    this.knots = knots;
     this.selectedKnot = undefined;
     this.boundaryCondition = 'fixed';
   }
@@ -84,7 +69,6 @@ export class Canvas {
     const width = this.canvas.width;
     const height = this.canvas.height;
     ctx.fillStyle = 'black';
-    console.log(width, height);
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
   }
