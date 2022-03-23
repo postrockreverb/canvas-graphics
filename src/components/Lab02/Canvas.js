@@ -1,4 +1,3 @@
-import * as math from 'mathjs';
 import { cubicSplineInterpolation } from './CubicSplineInterpolation';
 
 const initialKnots = [
@@ -19,45 +18,86 @@ const initialKnots = [
 export class Canvas {
   constructor(canvas) {
     const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Canvas 2D context not available.');
     this.canvas = canvas;
     this.ctx = ctx;
+    this.knots = initialKnots;
+    this.selectedKnot = undefined;
   }
+
+  startDragging(cursor) {
+    this.selectedKnot = this.getNearestKnot(cursor);
+  }
+
+  stopDragging() {
+    this.selectedKnot = undefined;
+  }
+
+  dragPoint(cursor) {
+    if (this.selectedKnot !== undefined) {
+      this.moveKnot(this.selectedKnot, cursor);
+    }
+  }
+
+  moveKnot(nKnot, newPosition) {
+    this.knots[nKnot] = newPosition;
+  }
+
+  getNearestKnot(point) {
+    const knots = this.knots;
+    const radius = 15;
+    for (let i = 0; i < knots.length; i++) {
+      const knot = knots[i];
+      if (Math.abs(point.x - knot.x) <= radius && Math.abs(point.y - knot.y) <= radius) {
+        return i;
+      }
+    }
+    return undefined;
+  }
+
+  //------------------------------------------------------------
 
   clearCanvas() {
     const ctx = this.ctx;
     ctx.save();
     const width = this.canvas.width;
     const height = this.canvas.height;
-    ctx.fillStyle = '#F8F8F8';
+    ctx.fillStyle = 'black';
+    console.log(width, height);
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
   }
 
   drawFunctionCurveFromKnots() {
     const ctx = this.ctx;
-    const functions = cubicSplineInterpolation(initialKnots, 'quadratic');
+    const knots = this.knots;
+    const functions = cubicSplineInterpolation(knots, 'quadratic');
+
+    ctx.save();
+    ctx.beginPath();
     for (const f of functions) {
       for (let x = f.range.xmin; x < f.range.xmax; x++) {
-        const y = f.a * math.pow(x, 3) + f.b * math.pow(x, 2) + f.c * x + f.d;
-        ctx.save();
-        ctx.beginPath();
-        ctx.fillRect(x, y, 2, 2);
-        ctx.stroke();
-        ctx.restore();
+        const y = f.a * Math.pow(x, 3) + f.b * Math.pow(x, 2) + f.c * x + f.d;
+        ctx.lineTo(x, y);
       }
     }
+    ctx.lineWidth = 3;
+    ctx.fillStyle = 'thistle';
+    ctx.strokeStyle = 'thistle';
+    ctx.stroke();
+    ctx.restore();
   }
 
   drawKnots() {
     const ctx = this.ctx;
-    for (let i = 0; i < initialKnots.length; i++) {
-      const knot = initialKnots[i];
+    const knots = this.knots;
+    for (let i = 0; i < knots.length; i++) {
+      const isSelected = i === this.selectedKnot;
+      const knot = knots[i];
       ctx.save();
       ctx.beginPath();
       ctx.arc(knot.x, knot.y, 5, 0, 2 * Math.PI);
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#CC4444';
+      ctx.lineWidth = isSelected ? 5 : 3;
+      ctx.strokeStyle = isSelected ? '#0080FF' : '#CC4444';
       ctx.stroke();
       ctx.restore();
     }

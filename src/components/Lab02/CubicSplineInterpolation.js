@@ -1,9 +1,5 @@
 import * as math from 'mathjs';
 
-// Cubic spline interpolation
-// The function uses the library math.js to ensure high precision results.
-// @param p The points. An array of objects with x and y coordinate.
-// @param type The interpolation boundary condition ("quadratic", "notaknot", "periodic", "natural"). "natural" is the default value.
 export function cubicSplineInterpolation(p, boundary) {
   var row = 0;
   var solutionIndex = (p.length - 1) * 4;
@@ -114,23 +110,19 @@ export function cubicSplineInterpolation(p, boundary) {
 }
 
 // Reduced row echelon form
-// Taken from https://rosettacode.org/wiki/Reduced_row_echelon_form
-// Modified to work with math.js (high float precision).
+// https://rosettacode.org/wiki/Reduced_row_echelon_form
 function rref(mat) {
   var lead = 0;
   for (var r = 0; r < mat.length; r++) {
-    if (mat[0].length <= lead) {
-      return;
-    }
+    if (mat[0].length <= lead) return;
+
     var i = r;
     while (mat[i][lead] == 0) {
       i++;
       if (mat.length == i) {
         i = r;
         lead++;
-        if (mat[0].length == lead) {
-          return;
-        }
+        if (mat[0].length == lead) return;
       }
     }
 
