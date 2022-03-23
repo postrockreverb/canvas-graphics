@@ -15,6 +15,13 @@ const initialKnots = [
   { x: 750, y: 90 },
 ];
 
+Array.prototype.swap = function (x, y) {
+  var b = this[x];
+  this[x] = this[y];
+  this[y] = b;
+  return this;
+};
+
 export class Canvas {
   constructor(canvas) {
     const ctx = canvas.getContext('2d');
@@ -40,6 +47,15 @@ export class Canvas {
 
   moveKnot(nKnot, newPosition) {
     this.knots[nKnot] = newPosition;
+    this.sortKnots();
+    this.selectedKnot = this.getNearestKnot(newPosition);
+  }
+
+  sortKnots() {
+    const knots = this.knots;
+    const selected = this.selectedKnot;
+    if (selected !== knots.length - 1 && knots[selected].x > knots[selected + 1].x) this.knots.swap(selected, selected + 1);
+    else if (selected !== 0 && knots[selected].x < knots[selected - 1].x) this.knots.swap(selected, selected - 1);
   }
 
   getNearestKnot(point) {
