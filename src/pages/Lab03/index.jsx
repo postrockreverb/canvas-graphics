@@ -8,7 +8,7 @@ import { Point } from '../../utils/point.js';
 
 import { Slider } from '../../components/Slider/Slider';
 
-const points = [new Point(200, 200, 0), new Point(300, 300, 200), new Point(300, 200, 200), new Point(200, 300, 0)];
+const points = [new Point(200, 200, 200), new Point(200, 400, 0), new Point(400, 200, 0), new Point(400, 400, 200)];
 
 class CanvasProvider extends React.Component {
   constructor({ width, height }) {

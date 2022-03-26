@@ -11,6 +11,10 @@ const addPoint = (pointA, pointB) => {
 };
 
 export class Surface {
+  state = {
+    rotation: new Point(0, 0, 0),
+  };
+
   constructor(canvas, knots) {
     const ctx = canvas.getContext('2d');
     this.canvas = canvas;
@@ -22,6 +26,7 @@ export class Surface {
     this.cube = new Cube(this.canvas, this.center, this.size);
 
     this.bSurface = [];
+    this.buildSurface();
   }
 
   getCenter() {
@@ -54,39 +59,48 @@ export class Surface {
       return res;
     };
 
-    for (let i = 0; i < 1; i += 0.1)
-      for (let j = 0; j < 1; j += 0.1) {
-        this.bSurface.push(interpolate(i, j, this.knots));
+    const surface = [];
+
+    for (let i = 0; i < 1; i += 0.05)
+      for (let j = 0; j < 1; j += 0.05) {
+        surface.push(interpolate(i, j, this.knots));
       }
+
+    this.bSurface = surface;
   }
 
-  rotateBSurface(axes, rads) {
-    let axisDict = {
-      x: ['y', 'z'],
-      y: ['x', 'z'],
-      z: ['x', 'y'],
+  setRotation(axes, rads) {
+    const rotate = (axes, rads) => {
+      let axisDict = {
+        x: ['y', 'z'],
+        y: ['x', 'z'],
+        z: ['x', 'y'],
+      };
+      let a = axisDict[axes][0];
+      let b = axisDict[axes][1];
+
+      for (let v of this.bSurface) {
+        let distA = v.get(a) - this.center.get(a);
+        let distB = v.get(b) - this.center.get(b);
+
+        let valA = distA * Math.cos(rads) - distB * Math.sin(rads);
+        let valB = distA * Math.sin(rads) + distB * Math.cos(rads);
+
+        v.set(a, valA + this.center.get(a));
+        v.set(b, valB + this.center.get(b));
+      }
     };
-    let a = axisDict[axes][0];
-    let b = axisDict[axes][1];
-
-    for (let v of this.bSurface) {
-      let distA = v.get(a) - this.center.get(a);
-      let distB = v.get(b) - this.center.get(b);
-
-      let valA = distA * Math.cos(rads) - distB * Math.sin(rads);
-      let valB = distA * Math.sin(rads) + distB * Math.cos(rads);
-
-      v.set(a, valA + this.center.get(a));
-      v.set(b, valB + this.center.get(b));
-    }
+    const drads = rads - this.state.rotation.get(axes);
+    this.state.rotation.set(axes, rads);
+    rotate(axes, drads);
+    this.cube.rotate(axes, drads);
   }
 
   // --------------------------------------------------
 
   rotate(axes, degs) {
     const rads = toRad(degs);
-    this.cube.setRotation(axes, rads);
-    this.rotateBSurface(axes, rads);
+    this.setRotation(axes, rads);
     this.draw();
   }
 
@@ -112,29 +126,9 @@ export class Surface {
     }
   }
 
-  drawKnots() {
-    const ctx = this.ctx;
-    const knots = this.knots;
-    for (let i = 0; i < knots.length; i++) {
-      const isSelected = i === this.selectedKnot;
-      const knot = knots[i];
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(knot.x, knot.y, 5, 0, 2 * Math.PI);
-      ctx.lineWidth = isSelected ? 5 : 3;
-      ctx.strokeStyle = isSelected ? '#0080FF' : '#CC4444';
-      ctx.stroke();
-      ctx.restore();
-    }
-  }
-
   draw() {
     this.clearCanvas();
     this.cube.draw();
-
-    this.buildSurface();
     this.drawSurface();
-
-    // this.drawKnots();
   }
 }
