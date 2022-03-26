@@ -5,11 +5,20 @@ class Figure {
     rotation: new Point(0, 0, 0),
   };
 
-  constructor(c, size) {
-    this.c = c;
+  constructor(canvas, center, size) {
+    const ctx = canvas.getContext('2d');
+    this.canvas = canvas;
+    this.ctx = ctx;
+
+    this.c = center;
     this.size = size;
     this.vertices = [];
     this.edges = [];
+
+    ctx.fillStyle = 'black';
+    ctx.strokeStyle = 'thistle';
+    ctx.lineWidth = this.canvas.width / 300;
+    ctx.lineCap = 'round';
   }
 
   shape(vertices, edges) {
@@ -54,19 +63,23 @@ class Figure {
     }
   }
 
-  draw(ctx) {
+  draw() {
+    const ctx = this.ctx;
+
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); // fill background
+
+    ctx.beginPath();
     for (let edge of this.edges) {
-      ctx.beginPath();
       ctx.moveTo(this.vertices[edge[0]].x, this.vertices[edge[0]].y);
       ctx.lineTo(this.vertices[edge[1]].x, this.vertices[edge[1]].y);
-      ctx.stroke();
     }
+    ctx.stroke();
   }
 }
 
 class Cube extends Figure {
-  constructor(c, size) {
-    super(c, size);
+  constructor(canvas, c, size) {
+    super(canvas, c, size);
     const v = [
       new Point(c.x - size, c.y - size, c.z - size),
       new Point(c.x + size, c.y - size, c.z - size),
@@ -88,8 +101,8 @@ class Cube extends Figure {
 }
 
 class Pyramid extends Figure {
-  constructor(c, size) {
-    super(c, size);
+  constructor(canvas, c, size) {
+    super(canvas, c, size);
     const v = [
       new Point(c.x - size, c.y - size, c.z - size),
       new Point(c.x + size, c.y - size, c.z - size),
@@ -108,8 +121,8 @@ class Pyramid extends Figure {
 }
 
 class Diamond extends Figure {
-  constructor(c, size) {
-    super(c, size);
+  constructor(canvas, c, size) {
+    super(canvas, c, size);
     const v = [
       new Point(c.x - size / 2, c.y - size, c.z),
       new Point(c.x + size / 2, c.y - size, c.z),
