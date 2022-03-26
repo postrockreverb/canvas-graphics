@@ -39,4 +39,22 @@ export class Point {
         break;
     }
   }
+
+  scalePoint(factor) {
+    this.x *= factor;
+    this.y *= factor;
+    this.z *= factor;
+  }
+
+  addPoint(point) {
+    this.x += point.get('x');
+    this.y += point.get('y');
+    this.z += point.get('z');
+  }
+
+  subtrPoint(point) {
+    this.x -= point.get('x');
+    this.y -= point.get('y');
+    this.z -= point.get('z');
+  }
 }
