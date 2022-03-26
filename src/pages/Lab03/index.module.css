@@ -1,0 +1,10 @@
+.sliders {
+  padding: 7px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: black;
+  color: white;
+  font-size: large;
+  gap: 10px;
+}
