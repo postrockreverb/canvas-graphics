@@ -63,17 +63,20 @@ class Figure {
     }
   }
 
-  draw() {
+  drawCube() {
     const ctx = this.ctx;
-
-    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); // fill background
-
     ctx.beginPath();
     for (let edge of this.edges) {
       ctx.moveTo(this.vertices[edge[0]].x, this.vertices[edge[0]].y);
       ctx.lineTo(this.vertices[edge[1]].x, this.vertices[edge[1]].y);
     }
     ctx.stroke();
+  }
+
+  draw() {
+    const ctx = this.ctx;
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); // fill background
+    this.drawCube();
   }
 }
 
