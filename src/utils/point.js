@@ -1,4 +1,4 @@
-class Point {
+export class Point {
   constructor(x, y, z) {
     this.x = x;
     this.y = y;
@@ -40,5 +40,3 @@ class Point {
     }
   }
 }
-
-export default Point;

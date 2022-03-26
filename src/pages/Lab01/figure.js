@@ -1,4 +1,4 @@
-import Point from './point.js';
+import { Point } from '../../utils/point.js';
 
 class Figure {
   state = {

@@ -3,14 +3,12 @@ import styles from './index.module.css';
 import React, { useState, useRef, useEffect } from 'react';
 
 import { Cube, Pyramid, Diamond } from './figure';
-import Point from './point';
 
-import Slider from './Slider';
-import Selector from './Selector';
+import { Point } from '../../utils/point';
+import { toRad } from '../../utils/toRad';
 
-const toRad = (degs) => {
-  return (degs * Math.PI) / 180;
-};
+import { Slider } from '../../components/Slider/Slider';
+import { Selector } from '../../components/Selector/Selector';
 
 const initRotDeg = new Point(45, 45, 36);
 const initRotRad = new Point(toRad(initRotDeg.get('x')), toRad(initRotDeg.get('y')), toRad(initRotDeg.get('z')));
@@ -63,10 +61,28 @@ const CanvasProvider = ({ width, height }) => {
   return (
     <>
       <div className={styles.sliders}>
-        <Selector onChange={(o) => changeFigure(o)} />
-        <Slider label="x" min={0} max={360} defaultValue={initRotDeg.get('x')} onChange={(v) => rotateFigure('x', v)} />
-        <Slider label="y" min={0} max={360} defaultValue={initRotDeg.get('y')} onChange={(v) => rotateFigure('y', v)} />
-        <Slider label="z" min={0} max={360} defaultValue={initRotDeg.get('z')} onChange={(v) => rotateFigure('z', v)} />
+        <Selector onChange={(o) => changeFigure(o)} options={options} />
+        <Slider
+          label="x"
+          min={0}
+          max={360}
+          defaultValue={initRotDeg.get('x')}
+          onChange={(e) => rotateFigure('x', e.target.value)}
+        />
+        <Slider
+          label="y"
+          min={0}
+          max={360}
+          defaultValue={initRotDeg.get('y')}
+          onChange={(e) => rotateFigure('y', e.target.value)}
+        />
+        <Slider
+          label="z"
+          min={0}
+          max={360}
+          defaultValue={initRotDeg.get('z')}
+          onChange={(e) => rotateFigure('z', e.target.value)}
+        />
       </div>
       <canvas width={width} height={height} ref={canvasRef} />
     </>
@@ -74,3 +90,9 @@ const CanvasProvider = ({ width, height }) => {
 };
 
 export default CanvasProvider;
+
+const options = {
+  Diamond: 'Diamond',
+  Cube: 'Cube',
+  Pyramid: 'Pyramid',
+};

@@ -1,9 +1,0 @@
-.rangeContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-}
-
-.range {
-  width: 200px;
-}

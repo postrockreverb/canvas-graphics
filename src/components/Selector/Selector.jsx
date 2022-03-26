@@ -2,14 +2,7 @@ import styles from './Selector.module.css';
 
 import React from 'react';
 
-const Selector = ({ onChange }) => {
-  const options = {
-    fixed: 'закрепленные',
-    loose: 'cлабые',
-    periodic: 'цикличность',
-    aperiodic: 'ацикличность',
-  };
-
+export const Selector = ({ onChange, options }) => {
   const handleChange = (event) => {
     onChange(event.target.value);
   };
@@ -24,5 +17,3 @@ const Selector = ({ onChange }) => {
     </select>
   );
 };
-
-export default Selector;

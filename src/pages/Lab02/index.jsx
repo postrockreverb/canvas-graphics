@@ -4,8 +4,8 @@ import React from 'react';
 
 import { Canvas } from './canvas';
 
-import Selector from './Selector';
-import { Slider } from './Slider';
+import { Selector } from '../../components/Selector/Selector';
+import { Slider } from '../../components/Slider/Slider';
 
 const fitKnots = (width, height, n) => {
   const knots = [];
@@ -82,9 +82,16 @@ class CanvasProvider extends React.Component {
     return (
       <div className={styles.container}>
         <div className={styles.controls}>
-          <Selector onChange={(o) => this.figure.setBoundaryCondition(o)} />
+          <Selector onChange={(o) => this.figure.setBoundaryCondition(o)} options={options} />
           <input className={styles.reset} type="button" value="Reset" onClick={this.handleReset} />
-          <Slider min={3} max={15} value={this.state.knots} onChange={this.handleRange.bind(this)} />
+          <Slider
+            label={'knots'}
+            min={3}
+            max={15}
+            defaultValue={this.state.knots}
+            onChange={this.handleRange.bind(this)}
+            width={200}
+          />
         </div>
         <canvas ref={this.canvasRef} width={this.width} height={this.height} />
       </div>
@@ -100,4 +107,11 @@ const getMousePos = (canvas, evt) => {
     x: evt.clientX - rect.left,
     y: evt.clientY - rect.top,
   };
+};
+
+const options = {
+  fixed: 'закрепленные',
+  loose: 'cлабые',
+  periodic: 'цикличность',
+  aperiodic: 'ацикличность',
 };

@@ -9,6 +9,7 @@ export const Welcome = () => {
     <div className={styles.container}>
       <Link to="/Lab01">Lab01</Link>
       <Link to="/Lab02">Lab02</Link>
+      <Link to="/Lab03">Lab03</Link>
     </div>
   );
 };

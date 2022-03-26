@@ -6,10 +6,10 @@
 }
 
 .controls {
+  padding: 7px;
   display: flex;
   flex-direction: row;
   gap: 30px;
-  margin-left: 30px;
 }
 
 .reset {
