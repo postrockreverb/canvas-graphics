@@ -2,67 +2,76 @@ import { Cube } from '../Lab01/figure';
 import { Point } from '../../utils/point';
 import { toRad } from '../../utils/toRad';
 
-const scalePoint = (point, factor) => {
-  return new Point(point.get('x') * factor, point.get('y') * factor, point.get('z') * factor);
-};
-
-const addPoint = (pointA, pointB) => {
-  return new Point(pointA.get('x') + pointB.get('x'), pointA.get('y') + pointB.get('y'), pointA.get('z') + pointB.get('z'));
-};
-
 export class Surface {
   state = {
     rotation: new Point(0, 0, 0),
   };
 
   constructor(canvas, knots) {
+    const getCenter = () => {
+      const knots = this.knots;
+      const center = new Point(0, 0, 0);
+      let i = 0;
+      for (; i < knots.length; i++) {
+        center.addPoint(knots[i]);
+      }
+      center.scalePoint(1 / i);
+      return center;
+    };
+
+    const getSize = () => {
+      const knots = this.knots.map((item) => {
+        const p = new Point(item.x, item.y, item.z);
+        p.subtrPoint(this.center);
+        return p;
+      });
+
+      const diff = new Point(0, 0, 0);
+      const dims = ['x', 'y', 'z'];
+      for (const p of knots)
+        for (const d of dims) {
+          if (p.get(d) > diff.get(d)) diff.set(d, p.get(d));
+        }
+
+      return Math.max(diff.x, diff.y, diff.z);
+    };
+
     const ctx = canvas.getContext('2d');
     this.canvas = canvas;
     this.ctx = ctx;
     this.knots = knots;
 
-    this.size = 100;
-    this.center = this.getCenter();
+    this.center = getCenter();
+    this.size = getSize();
     this.cube = new Cube(this.canvas, this.center, this.size);
 
     this.bSurface = [];
     this.buildSurface();
   }
 
-  getCenter() {
-    const knots = this.knots;
-    let center = new Point(0, 0, 0);
-    let i = 0;
-    for (; i < knots.length; i++) {
-      const p = knots[i];
-      center = addPoint(center, p);
-    }
-    center = scalePoint(center, 1 / i);
-    return center;
-  }
-
   buildSurface() {
     const interpolate = (u, w) => {
-      const points = [];
-      const knots = this.knots;
+      const knots = this.knots.map((item) => {
+        return new Point(item.x, item.y, item.z);
+      });
 
-      points[0] = scalePoint(knots[0], (1 - u) * (1 - w));
-      points[1] = scalePoint(knots[1], (1 - u) * w);
-      points[2] = scalePoint(knots[2], u * (1 - w));
-      points[3] = scalePoint(knots[3], u * w);
+      knots[0].scalePoint((1 - u) * (1 - w));
+      knots[1].scalePoint((1 - u) * w);
+      knots[2].scalePoint(u * (1 - w));
+      knots[3].scalePoint(u * w);
 
       let res = new Point(0, 0, 0);
-      res = addPoint(res, points[0]);
-      res = addPoint(res, points[1]);
-      res = addPoint(res, points[2]);
-      res = addPoint(res, points[3]);
+      res.addPoint(knots[0]);
+      res.addPoint(knots[1]);
+      res.addPoint(knots[2]);
+      res.addPoint(knots[3]);
       return res;
     };
 
     const surface = [];
 
-    for (let i = 0; i < 1; i += 0.05)
-      for (let j = 0; j < 1; j += 0.05) {
+    for (let i = 0; i < 1; i += 0.03)
+      for (let j = 0; j < 1; j += 0.03) {
         surface.push(interpolate(i, j, this.knots));
       }
 
@@ -128,7 +137,7 @@ export class Surface {
 
   draw() {
     this.clearCanvas();
-    this.cube.draw();
     this.drawSurface();
+    this.cube.drawCube();
   }
 }

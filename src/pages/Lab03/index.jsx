@@ -8,7 +8,18 @@ import { Point } from '../../utils/point.js';
 
 import { Slider } from '../../components/Slider/Slider';
 
-const points = [new Point(200, 200, 200), new Point(200, 400, 0), new Point(400, 200, 0), new Point(400, 400, 200)];
+const getCenteredPoints = (width, height) => {
+  const points = [new Point(0, 0, 1), new Point(0, 1, 0), new Point(1, 0, 0), new Point(1, 1, 1)];
+  const center = new Point(width / 2, height / 2, 0);
+  const size = (width < height ? width : height) / 2;
+  points.map((item) => {
+    item.scalePoint(size);
+    item.addPoint(center);
+    item.x -= size / 2;
+    item.y -= size / 2;
+  });
+  return points;
+};
 
 class CanvasProvider extends React.Component {
   constructor({ width, height }) {
@@ -24,7 +35,7 @@ class CanvasProvider extends React.Component {
     this.canvasRef.current.width = this.width;
     this.canvasRef.current.height = this.height;
 
-    this.figure = new Surface(this.canvasRef.current, points);
+    this.figure = new Surface(this.canvasRef.current, getCenteredPoints(this.width, this.height));
     this.figure.draw();
   }
 
