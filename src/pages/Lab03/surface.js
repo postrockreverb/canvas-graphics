@@ -171,7 +171,7 @@ export class Surface {
 
   draw() {
     this.clearCanvas();
-    this.cube.drawCube();
     this.drawSurface(this.drawMethod);
+    this.cube.drawCube();
   }
 }
