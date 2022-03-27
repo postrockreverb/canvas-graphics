@@ -45,9 +45,10 @@ export class Surface {
     this.size = getSize();
     this.cube = new Cube(this.canvas, this.center, this.size);
     this.drawMethod = 'lines';
+    this.density = 20;
 
     this.bSurface = [];
-    this.buildSurface(20);
+    this.buildSurface(this.density);
   }
 
   buildSurface(density) {
@@ -114,6 +115,7 @@ export class Surface {
   }
 
   setDensity(value) {
+    this.density = value;
     this.buildSurface(value);
     this.rotateSurface('x', this.state.rotation.x);
     this.rotateSurface('y', this.state.rotation.y);
@@ -172,6 +174,6 @@ export class Surface {
   draw() {
     this.clearCanvas();
     this.drawSurface(this.drawMethod);
-    this.cube.drawCube();
+    // this.cube.drawCube();
   }
 }
