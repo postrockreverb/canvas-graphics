@@ -44,12 +44,13 @@ export class Surface {
     this.center = getCenter();
     this.size = getSize();
     this.cube = new Cube(this.canvas, this.center, this.size);
+    this.drawMethod = 'lines';
 
     this.bSurface = [];
-    this.buildSurface();
+    this.buildSurface(20);
   }
 
-  buildSurface() {
+  buildSurface(density) {
     const interpolate = (u, w) => {
       const knots = this.knots.map((item) => {
         return new Point(item.x, item.y, item.z);
@@ -69,49 +70,63 @@ export class Surface {
     };
 
     const surface = [];
-
-    for (let i = 0; i < 1; i += 0.03)
-      for (let j = 0; j < 1; j += 0.03) {
+    density = 1 / density;
+    for (let i = 0; i < 1; i += density)
+      for (let j = 0; j < 1; j += density) {
         surface.push(interpolate(i, j, this.knots));
       }
 
     this.bSurface = surface;
   }
 
-  setRotation(axes, rads) {
-    const rotate = (axes, rads) => {
-      let axisDict = {
-        x: ['y', 'z'],
-        y: ['x', 'z'],
-        z: ['x', 'y'],
-      };
-      let a = axisDict[axes][0];
-      let b = axisDict[axes][1];
-
-      for (let v of this.bSurface) {
-        let distA = v.get(a) - this.center.get(a);
-        let distB = v.get(b) - this.center.get(b);
-
-        let valA = distA * Math.cos(rads) - distB * Math.sin(rads);
-        let valB = distA * Math.sin(rads) + distB * Math.cos(rads);
-
-        v.set(a, valA + this.center.get(a));
-        v.set(b, valB + this.center.get(b));
-      }
+  rotateSurface(axes, rads) {
+    let axisDict = {
+      x: ['y', 'z'],
+      y: ['x', 'z'],
+      z: ['x', 'y'],
     };
-    const drads = rads - this.state.rotation.get(axes);
-    this.state.rotation.set(axes, rads);
-    rotate(axes, drads);
-    this.cube.rotate(axes, drads);
+    let a = axisDict[axes][0];
+    let b = axisDict[axes][1];
+
+    for (let v of this.bSurface) {
+      let distA = v.get(a) - this.center.get(a);
+      let distB = v.get(b) - this.center.get(b);
+
+      let valA = distA * Math.cos(rads) - distB * Math.sin(rads);
+      let valB = distA * Math.sin(rads) + distB * Math.cos(rads);
+
+      v.set(a, valA + this.center.get(a));
+      v.set(b, valB + this.center.get(b));
+    }
   }
 
-  // --------------------------------------------------
+  setRotation(axes, rads) {
+    const drads = rads - this.state.rotation.get(axes);
+    this.state.rotation.set(axes, rads);
+    this.rotateSurface(axes, drads);
+    this.cube.rotate(axes, drads);
+  }
 
   rotate(axes, degs) {
     const rads = toRad(degs);
     this.setRotation(axes, rads);
     this.draw();
   }
+
+  setDensity(value) {
+    this.buildSurface(value);
+    this.rotateSurface('x', this.state.rotation.x);
+    this.rotateSurface('y', this.state.rotation.y);
+    this.rotateSurface('z', this.state.rotation.z);
+    this.draw();
+  }
+
+  setDrawMethod(value) {
+    this.drawMethod = value;
+    this.draw();
+  }
+
+  // --------------------------------------------------
 
   clearCanvas() {
     const ctx = this.ctx;
@@ -123,21 +138,40 @@ export class Surface {
     ctx.restore();
   }
 
-  drawSurface() {
+  drawSurface(style) {
     const ctx = this.ctx;
-    for (const p of this.bSurface) {
+
+    const drawDots = () => {
+      for (const p of this.bSurface) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 1;
+        ctx.arc(p.x, p.y, 1, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+      }
+    };
+
+    const drawLines = () => {
       ctx.save();
       ctx.beginPath();
-      ctx.strokeStyle = 'white';
-      ctx.arc(p.x, p.y, 1, 0, 2 * Math.PI);
+      for (const p of this.bSurface) {
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 1;
+        ctx.arc(p.x, p.y, 1, 0, 2 * Math.PI);
+      }
       ctx.stroke();
       ctx.restore();
-    }
+    };
+
+    if (style === 'lines') drawLines();
+    else drawDots();
   }
 
   draw() {
     this.clearCanvas();
-    this.drawSurface();
     this.cube.drawCube();
+    this.drawSurface(this.drawMethod);
   }
 }

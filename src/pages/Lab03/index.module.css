@@ -1,3 +1,10 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  color: white;
+}
+
 .sliders {
   padding: 7px;
   display: flex;
@@ -7,4 +14,34 @@
   color: white;
   font-size: large;
   gap: 10px;
+}
+
+.points {
+  position: absolute;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.points > div {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 3px;
+  /* border-bottom: 1px solid white; */
+}
+
+.points > div > div {
+  margin-right: 15px;
+}
+
+.points > div > input {
+  width: 40px;
+  color: white;
+  background-color: #ffffff00;
+  outline: none;
+  border: none;
 }
