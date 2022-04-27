@@ -10,6 +10,7 @@ export const Welcome = () => {
       <Link to="/Lab01">Lab01</Link>
       <Link to="/Lab02">Lab02</Link>
       <Link to="/Lab03">Lab03</Link>
+      <Link to="/Lab04">Lab04</Link>
     </div>
   );
 };
