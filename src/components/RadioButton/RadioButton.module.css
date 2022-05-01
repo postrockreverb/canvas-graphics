@@ -1,0 +1,9 @@
+.container {
+  width: 170px;
+}
+
+.radio {
+  display: flex;
+  width: 170px;
+  justify-content: space-between;
+}
