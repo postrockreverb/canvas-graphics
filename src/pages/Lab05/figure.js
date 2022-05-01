@@ -191,7 +191,7 @@ class Figure {
     for (let edge of invisibleEdges) {
       const v1 = this.vertices[edge[0]];
       const v2 = this.vertices[edge[1]];
-      ctx.dashedLine(v1.x, v1.y, v2.x, v2.y, 70);
+      ctx.dashedLine(v1.x, v1.y, v2.x, v2.y, Math.min(this.canvas.width, this.canvas.height) / 72);
     }
     ctx.stroke();
   }

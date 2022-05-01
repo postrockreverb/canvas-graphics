@@ -8,7 +8,6 @@ import { Point } from '../../utils/point';
 import { toRad } from '../../utils/toRad';
 
 import { Checkbox } from '../../components/Checkbox/Checkbox';
-import { Selector } from '../../components/Selector/Selector';
 import { RadioButton } from '../../components/RadioButton/RadioButton';
 
 const initRotDeg = new Point(45, 45, 36);
@@ -29,6 +28,10 @@ class CanvasProvider extends React.Component {
 
     this.mouseIsDown = false;
     this.startDragPos = null;
+
+    this.showInvEdges = true;
+    this.showVisEdges = true;
+    this.showVert = 'Labels';
   }
 
   componentDidMount() {
@@ -75,6 +78,9 @@ class CanvasProvider extends React.Component {
     };
     this.figure = figures[name];
     this.figure.setRotationPoint(currentRotation);
+    this.figure.showInvEdges = this.showInvEdges;
+    this.figure.showVisEdges = this.showVisEdges;
+    this.figure.showVert = this.showVert;
     this.figure.draw();
   }
 
@@ -89,6 +95,7 @@ class CanvasProvider extends React.Component {
               label="Invisible edges"
               defaultValue={true}
               onChange={(e) => {
+                this.showInvEdges = e;
                 this.figure.showInvEdges = e;
                 this.figure.draw();
               }}
@@ -97,6 +104,7 @@ class CanvasProvider extends React.Component {
               label="Visible edges"
               defaultValue={true}
               onChange={(e) => {
+                this.showVisEdges = e;
                 this.figure.showVisEdges = e;
                 this.figure.draw();
               }}
@@ -106,6 +114,7 @@ class CanvasProvider extends React.Component {
             legend="Vertices"
             labels={['Labels', 'Coords', 'None']}
             onChange={(r) => {
+              this.showVert = r;
               this.figure.showVert = r;
               this.figure.draw();
             }}
