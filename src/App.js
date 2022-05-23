@@ -6,6 +6,7 @@ import Lab02 from './pages/Lab02';
 import Lab03 from './pages/Lab03';
 import Lab04 from './pages/Lab04';
 import Lab05 from './pages/Lab05';
+import Lab06 from './pages/Lab06';
 
 import { Welcome } from './components/Welcome/Welcome';
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="Lab03" element={<Lab03 width={width} height={height} />} />
           <Route path="Lab04" element={<Lab04 width={width} height={height} />} />
           <Route path="Lab05" element={<Lab05 width={width} height={height} />} />
+          <Route path="Lab06" element={<Lab06 width={width} height={height} />} />
         </Route>
       </Routes>
     </BrowserRouter>
