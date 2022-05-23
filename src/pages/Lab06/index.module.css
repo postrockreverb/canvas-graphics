@@ -13,9 +13,11 @@
   background-color: black;
   color: white;
   font-size: large;
-  gap: 10px;
 }
 
 .edges {
-  width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 270px;
 }

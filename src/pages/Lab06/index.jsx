@@ -9,9 +9,12 @@ const style = {
   height: window.innerHeight, // we can control scene size by setting container dimensions
 };
 
+const size = 1.5;
+
 class App extends Component {
   constructor() {
     super();
+    this.color = 0x156289;
   }
 
   componentDidMount() {
@@ -63,15 +66,19 @@ class App extends Component {
     this.mount.appendChild(this.renderer.domElement); // mount using React ref
   };
 
-  getCube = () => {
-    const size = 1;
-    const geometry = new THREE.BoxGeometry(size, size, size);
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x156289,
+  getMaterial = (color) => {
+    const material = new THREE.MeshPhysicalMaterial({
+      color: color,
       emissive: 0x072534,
       side: THREE.DoubleSide,
       flatShading: true,
     });
+    return material;
+  };
+
+  getCube = () => {
+    const geometry = new THREE.BoxGeometry(size, size, size);
+    const material = this.getMaterial(this.color);
     const figure = new THREE.Mesh(geometry, material);
     figure.castShadow = true;
     figure.position.y = 2;
@@ -80,14 +87,8 @@ class App extends Component {
   };
 
   getPyramid = () => {
-    const size = 1;
     const geometry = new THREE.CylinderGeometry(0.001, size * 1, size * 1, 4);
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x156289,
-      emissive: 0x072534,
-      side: THREE.DoubleSide,
-      flatShading: true,
-    });
+    const material = this.getMaterial(this.color);
     const figure = new THREE.Mesh(geometry, material);
     figure.castShadow = true;
     figure.position.y = 2;
@@ -131,49 +132,62 @@ class App extends Component {
     return (
       <div>
         <div className={styles.sliders}>
-          <Selector
-            onChange={(o) => {
-              this.scene.remove(this.figure);
-              switch (o) {
-                case 'cube':
-                  this.figure = this.getCube();
-                  break;
-                case 'pyramid':
-                  this.figure = this.getPyramid();
-                  break;
-              }
-              this.scene.add(this.figure);
-            }}
-            options={options}
-          />
-          <Slider
-            label="Intensity"
-            min={0}
-            max={100}
-            defaultValue={20}
-            onChange={(e) => (this.bulbLight.intensity = e.target.value)}
-          />
-          <Slider
-            label="x"
-            min={-50}
-            max={50}
-            defaultValue={0}
-            onChange={(e) => (this.bulbLight.position.x = e.target.value / 50)}
-          />
-          <Slider
-            label="y"
-            min={-50}
-            max={50}
-            defaultValue={0}
-            onChange={(e) => (this.bulbLight.position.y = e.target.value / 50 + 2)}
-          />
-          <Slider
-            label="z"
-            min={-50}
-            max={50}
-            defaultValue={0}
-            onChange={(e) => (this.bulbLight.position.z = e.target.value / 50)}
-          />
+          <fieldset className={styles.edges}>
+            <legend>Controls</legend>
+            <Selector
+              onChange={(o) => {
+                this.scene.remove(this.figure);
+                switch (o) {
+                  case 'cube':
+                    this.figure = this.getCube();
+                    break;
+                  case 'pyramid':
+                    this.figure = this.getPyramid();
+                    break;
+                }
+                this.scene.add(this.figure);
+              }}
+              options={options}
+            />
+            <Slider
+              label="Intensity"
+              min={0}
+              max={100}
+              defaultValue={20}
+              onChange={(e) => (this.bulbLight.intensity = e.target.value)}
+            />
+            <Slider
+              label="x"
+              min={-100}
+              max={100}
+              defaultValue={0}
+              onChange={(e) => (this.bulbLight.position.x = e.target.value / 50)}
+            />
+            <Slider
+              label="y"
+              min={-100}
+              max={100}
+              defaultValue={0}
+              onChange={(e) => (this.bulbLight.position.y = e.target.value / 50 + 2)}
+            />
+            <Slider
+              label="z"
+              min={-100}
+              max={100}
+              defaultValue={0}
+              onChange={(e) => (this.bulbLight.position.z = e.target.value / 50)}
+            />
+            <input
+              style={{ width: '100%' }}
+              type="color"
+              defaultValue={'#156289'}
+              onChange={(e) => {
+                const rgb = toRGB(e.target.value.slice(1, e.target.value.length));
+                this.color = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                this.figure.material = this.getMaterial(this.color);
+              }}
+            />
+          </fieldset>
         </div>
         <div style={style} ref={(ref) => (this.mount = ref)} />
       </div>
@@ -192,6 +206,12 @@ const toRadians = (angle) => {
 };
 
 const options = {
-  cube: 'cube',
-  pyramid: 'pyramid',
+  cube: 'Cube',
+  pyramid: 'Pyramid',
+};
+
+const toRGB = (value) => {
+  var aRgbHex = value.match(/.{1,2}/g);
+  var aRgb = [parseInt(aRgbHex[0], 16), parseInt(aRgbHex[1], 16), parseInt(aRgbHex[2], 16)];
+  return aRgb;
 };
